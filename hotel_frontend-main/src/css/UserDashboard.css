@@ -1,0 +1,47 @@
+.user-details{
+
+    height: 130px;
+    width: 1515px;
+    /* background-color: aqua; */
+
+}
+.user-details h5{
+    color: rgb(1, 97, 38);
+    margin-left: 200px;
+    margin-top: 80px;
+    font-size: 25px;
+}
+.user-details h4{
+    margin-left: 220px;
+}
+.user-line{
+    height: 1px;
+    width: 1515px;
+    background-color: rgb(1, 97, 38);
+}
+.user-info{
+    width: 1515px;
+    height: 150px;
+    /* background-color: rgb(196, 138, 250); */
+}
+.user-info h5{
+    color: rgb(1, 97, 38);
+    margin-left: 200px;
+    padding-top: 80px;
+    /* margin-top: 80px; */
+    font-size: 25px;
+}
+.user-information{
+    height: 600px;
+    width: 1515px;
+    /* background-color: rgb(27, 192, 137); */
+}
+
+.user-container{
+
+    padding-left: 100px;
+
+}
+.col{
+    padding-top: 20px;
+}

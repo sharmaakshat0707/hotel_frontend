@@ -1,0 +1,36 @@
+.available{
+    padding-top: 100px;
+    height: 700px;
+    width: 1519px;
+    /* background-color: rgba(196, 200, 196, 0.449); */
+    background-image: url(https://images.pexels.com/photos/2598638/pexels-photo-2598638.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+}
+label{
+    color: rgb(17, 16, 16);
+}
+.available .available-box{
+    margin: 150px 100px;
+    height: 200px;
+    width: 1300px;
+    background-color:#605f5f70;
+    box-shadow: 5px 10px 18px #35353579;
+}
+.con-button{
+    margin-left: 170px;
+    border-radius: 8px;
+    letter-spacing: 2px;
+    padding: 10px 30px;
+    background-color: rgb(55, 154, 83);
+}
+button:hover {
+    background-color:  #3296c0;
+    color: white;
+}
+input{
+    margin: 2px 10px;
+    padding: 10px;
+}

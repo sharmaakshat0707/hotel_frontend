@@ -1,0 +1,82 @@
+#Panel{
+    /* position: fixed;
+    top: 0;
+    z-index: 100;
+    width: 100%; */
+    display: flex;
+    justify-content: space-around;
+    background-color: rgba(222, 222, 219, 0.611);
+}
+.dashboard-heading {
+    font-family: "Times New Roman", Times, serif;
+    color: rgba(177, 175, 175, 0.822);
+  }
+  
+  .owner {
+    
+  }
+  
+  .manager {
+    
+  }
+  
+  .receptionist {
+    
+  }
+  
+/* .inner{
+    background-color: black;
+} */
+.inner a{
+    height: 10px ;
+    padding: 40px 25px;
+    text-decoration: none;
+    color: #565454;
+}
+.inner button{
+    box-shadow: none;
+    padding: 7px 20px;
+    border-radius: 5px;
+    margin-top: 7px;
+    margin-left: 40px;
+    color: rgb(250, 250, 249);
+    border: 1px solid whitesmoke;
+    letter-spacing: 1px;
+    background-color: rgb(55, 154, 83);
+    /* background-color: rgb(183, 182, 180); */
+
+}
+button:hover {
+    background-color: #61e0b2;
+    color: white;
+}
+.lo{
+    width: 100px;
+    /* background-color: black; */
+
+}
+.logo{
+    /*   */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* padding-top: px; */
+    /* margin: 15px 20px; */
+    color: blue;
+}
+.logo .nav-but{
+    border: none;
+    box-shadow: none;
+    background-color:transparent;
+}
+
+/* @media screen and (min-width: 500px){
+    .inner a{
+        color: #61e0b2;
+    }
+    
+} */
+
+.dropdown-item{
+    cursor: pointer;
+}
