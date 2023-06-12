@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { deleteRoomById, getAllRooms } from '../services/RoomService';
 import { Button, ButtonGroup } from 'reactstrap';
+import Swal from 'sweetalert2';
 
 const ListRoomComponent = () => {
   const [rooms, setRooms] = useState([]);
@@ -36,17 +37,31 @@ const ListRoomComponent = () => {
   const deleteRoom = async (roomId) => {
     const token = localStorage.getItem('token');
 
-    try {
-      await deleteRoomById(roomId, token);
-      setRooms((prevRooms) => prevRooms.filter((room) => room.roomId !== roomId));
-    } catch (error) {
-      console.error('Error deleting room:', error);
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to delete this room.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteRoomById(roomId, token);
+          setRooms((prevRooms) => prevRooms.filter((room) => room.roomId !== roomId));
+          Swal.fire('Deleted!', 'Room deleted successfully.', 'success');
+        } catch (error) {
+          console.error('Error deleting room:', error);
+          Swal.fire('Error', 'An error occurred while deleting the room.', 'error');
+        }
+      }
+    });
   };
 
   return (
     <div className='container'>
-       <div>
+      <div>
         <ButtonGroup>
           <Button tag={Link} to="/manager/dashboard">
             Home
@@ -57,8 +72,8 @@ const ListRoomComponent = () => {
           <Button tag={Link} to="/listStaff">
             Staff
           </Button>
-          </ButtonGroup>
-          </div>
+        </ButtonGroup>
+      </div>
       <h2 className='text-center'>List Rooms</h2>
       <Link to='/addRoom' className='btn btn-primary mb-2'>
         Add Rooms
