@@ -3,8 +3,10 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import "../css/ImageSlider.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import Available from "./Available";
 import { getAvailableRooms } from "../services/RoomService";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { format } from "date-fns";
 
 const ImageSlider = () => {
   const location = useLocation();
@@ -17,19 +19,24 @@ const ImageSlider = () => {
   const [checked, setChecked] = useState(false);
 
   const [data, setData] = useState({
-    checkInDate: new Date(),
-    checkOutDate: new Date(),
-    numAdults: "",
-    numChildren: "",
+    checkInDate: location.state?.checkInDate ? new Date(location.state.checkInDate) : new Date(),
+    checkOutDate: location.state?.checkOutDate ? new Date(location.state.checkOutDate) : new Date(),
+    numAdults: location.state?.numAdults || "",
+    numChildren: location.state?.numChildren || "0",
   });
+
+  const currentFormattedDate = format(new Date(), "yyyy-MM-dd");
 
   const handleChange = (e) => {
     if (e.target.name === "checkInDate" || e.target.name === "checkOutDate") {
-      setData({ ...data, [e.target.name]: new Date(e.target.value) });
+      const dateValue = e.target.value;
+      const date = new Date(dateValue);
+      setData({ ...data, [e.target.name]: isNaN(date.getTime()) ? dateValue : date });
     } else {
       setData({ ...data, [e.target.name]: e.target.value });
     }
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const checkInDate = data.checkInDate.toISOString().split("T")[0];
@@ -40,7 +47,7 @@ const ImageSlider = () => {
     console.log(data);
 
     if (checkOutDate < checkInDate) {
-      toast.error("Check-out date should be after check-in date");
+      toast.error("CHECK-OUT DATE SHOULD BE AFTER CHECK-IN DATE");
       return;
     }
 
@@ -73,6 +80,7 @@ const ImageSlider = () => {
         console.log(err);
       });
   };
+
   useEffect(() => {
     if (
       location.state?.from === "/available" ||
@@ -122,53 +130,67 @@ const ImageSlider = () => {
       items: 1,
     },
   };
+
   return (
     <div>
+      <ToastContainer />
       <div className="App">
         <div className="imageSliderbox">
           <form onSubmit={handleSubmit}>
             <label style={{ margin: "20px 150px" }}>
-              <h6 style={{color:"#fff"}}>Check-In-Date:</h6>
+              <h6 style={{ color: "#fff" }}>Check-In-Date:</h6>
               <input
                 type="date"
                 name="checkInDate"
-                value={
-                  data.checkInDate.getFullYear().toString() +
-                  "-" +
-                  (data.checkInDate.getMonth() + 1).toString().padStart(2, 0) +
-                  "-" +
-                  data.checkInDate.getDate().toString().padStart(2, 0)
+                defaultValue={
+                  data.checkInDate instanceof Date
+                    ? `${data.checkInDate.getFullYear()}-${(
+                        data.checkInDate.getMonth() + 1
+                      )
+                        .toString()
+                        .padStart(2, "0")}-${data.checkInDate
+                        .getDate()
+                        .toString()
+                        .padStart(2, "0")}`
+                    : location.state?.checkInDate || ""
                 }
                 style={{ width: "150px", height: "40px" }}
                 onChange={handleChange}
+                min={currentFormattedDate} // Set the min attribute to the current formatted date
                 required
               />
             </label>
             <label style={{ marginRight: "140px" }}>
-              <h6 style={{color:"#fff"}}>Check-Out-Date:</h6>
+              <h6 style={{ color: "#fff" }}>Check-Out-Date:</h6>
               <input
                 type="date"
                 name="checkOutDate"
-                value={
-                  data.checkOutDate.getFullYear().toString() +
-                  "-" +
-                  (data.checkOutDate.getMonth() + 1).toString().padStart(2, 0) +
-                  "-" +
-                  data.checkOutDate.getDate().toString().padStart(2, 0)
+                defaultValue={
+                  data.checkOutDate instanceof Date
+                    ? `${data.checkOutDate.getFullYear()}-${(
+                        data.checkOutDate.getMonth() + 1
+                      )
+                        .toString()
+                        .padStart(2, "0")}-${data.checkOutDate
+                        .getDate()
+                        .toString()
+                        .padStart(2, "0")}`
+                    : location.state?.checkOutDate || ""
                 }
                 style={{ width: "150px", height: "40px", marginLeft: "5px" }}
                 onChange={handleChange}
+                min={currentFormattedDate} // Set the min attribute to the current formatted date
                 required
               />
             </label>
-            <label style={{ marginRight: "140px" }}>
-              <h6 style={{color:"#fff"}}>No of Adults</h6>
+            <label style={{ marginRight: "90px" }}>
+              <h6 style={{ color: "#fff" }}>No of Adults</h6>
               <input
                 type="number"
                 name="numAdults"
                 placeholder="Number of Guests"
                 onChange={handleChange}
-                value={data.numAdults}
+                defaultValue={data.numAdults}
                 min={1}
                 max={4}
                 style={{ width: "200px", height: "40px" }}
@@ -176,14 +198,14 @@ const ImageSlider = () => {
               />
             </label>
             <label>
-              <h6 style={{color:"#fff"}}>Number Of Children</h6>
+              <h6 style={{ color: "#fff" }}>Number Of Children(0-12)</h6>
               <input
                 type="number"
                 name="numChildren"
                 placeholder="Number Of Children"
                 onChange={handleChange}
-                value={data.numChildren} // Set default value to 0
-                min={1}
+                defaultValue={data.numChildren} // Set default value to 0
+                min={0}
                 max={2}
                 style={{ width: "200px", height: "40px" }}
                 required
@@ -195,9 +217,8 @@ const ImageSlider = () => {
               style={{
                 padding: "10px 30px",
                 marginLeft: "625px",
-                color: "#fff" ,
+                color: "#fff",
                 backgroundColor: "rgb(55, 154, 83)",
-                
               }}
             >
               Apply
@@ -219,7 +240,11 @@ const ImageSlider = () => {
                 <div
                   className="card"
                   key={index}
-                  style={{ padding: "10px 45px" }}
+                  style={{
+                    padding: "10px 21px",
+                    border: "1px solid lightGrey",
+                    boxShadow: "#fgh",
+                  }}
                 >
                   <img
                     className="product--image"
@@ -227,7 +252,7 @@ const ImageSlider = () => {
                     alt="room"
                     style={{
                       height: "400px",
-                      width: "500px",
+                      width: "400px",
                       marginBottom: "15px",
                     }}
                   />
@@ -245,10 +270,10 @@ const ImageSlider = () => {
                     >
                       Book Now
                     </button>
-                    <input
+                    {/* <input
                       type="checkbox"
                       onChange={() => handleRoomSelection(room.roomId)}
-                    />
+                    /> */}
                   </p>
                 </div>
               );
