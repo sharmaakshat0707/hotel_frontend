@@ -38,6 +38,7 @@ import ListGuest from './components/ListGuest'
 import ListBooking from './components/ListBooking'
 import ListRoom from './components/ListRoom'
 import ListUserComponent from './components/ListUserComponent'
+import BackToTop from './components/BackToTop'
 
 
 
@@ -89,6 +90,7 @@ const App = () => {
         <Route path="/userBookings" element={<ListUserComponent/>}/>
         <Route paht="/payment" element={<Payment/>}/>
       </Routes>
+      <BackToTop/>
     </div>
   )
 }
