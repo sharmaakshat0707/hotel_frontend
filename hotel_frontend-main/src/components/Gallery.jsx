@@ -5,7 +5,7 @@ const Gallery = () => {
   return (
     <div>
       <div className="text">
-        <h4>A WARM WELCOME AWAITS.</h4>
+        <h4 style={{color:"#1a8b46"}}>A WARM WELCOME AWAITS.</h4>
         <h5>.________________________.</h5>
         <p style={{fontSize:"16px"}}>Welcome to our hotel, a haven of comfort and hospitality nestled in a convenient location. As you enter our elegant lobby, you'll be greeted by a warm and inviting atmosphere that sets the tone for your stay. Our friendly and professional staff is dedicated to providing exceptional service, ensuring that your every need is met with a smile.</p>
         {/* <br/> */}
@@ -49,8 +49,7 @@ const Gallery = () => {
             
         </div>
         <div className="image">
-            <img src="https://images.pexels.com/photos/6970065/pexels-photo-6970065.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
-            
+            <img src="https://images.pexels.com/photos/6970065/pexels-photo-6970065.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />  
         </div>
         </div>
       </div>

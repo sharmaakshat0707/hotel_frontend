@@ -1,19 +1,19 @@
 .text{
     height: 400px;
-    width: 1535px;
-    padding: 2px 150px;
+    width: 1515px;
+    padding: 2px 50px;
     /* background-color: rgb(193, 149, 233); */
 }
 h4{
     /* color: rgb(188, 95, 95); */
-    margin-top: 20px;
-    margin-left: 370px;
+    margin-top: 80px;
+    margin-left: 470px;
     font-weight: 100;
     font-size: 40px;
     /* padding-left: 300px; */
 }
 h5{
-    margin-left: 500px;
+    margin-left: 600px;
     margin-bottom: 30px;
     font-size: 20px;
     color: rgb(63, 194, 98);
@@ -30,12 +30,12 @@ p{
     color: rgb(45, 44, 44);
     font-size: 55px;
     font-weight: 200;
-    margin-left: 40px;
+    margin-left: 60px;
 }
 .gallery{
     padding: 5px 150px;
     height: 750px;
-    width: 1537px;
+    width: 1515px;
     margin-bottom: 30px;
     /* background-color: rgb(255, 163, 163); */
 }
@@ -82,7 +82,7 @@ p{
     -webkit-transform: scale(1.5); /* Safari 3-8 */
     transform: scale(1.5); 
     z-index: 999;
-  }
+}
 img{
     display: block;
     /* width: 100%;
