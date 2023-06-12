@@ -9,7 +9,7 @@ function BackToTop() {
     setIsVisible(scrollTop > 300); 
   };
 
-  
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -29,7 +29,9 @@ function BackToTop() {
          <i class="ri-arrow-up-line"></i>  Back to Top
         </button>
       )}
+
     </div>
+    
   );
 }
 
