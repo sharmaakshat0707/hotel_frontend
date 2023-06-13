@@ -87,7 +87,7 @@ const Bills = () => {
       if (discountedPrice > 0 && discountPercentage > 0) {
         Swal.fire({
           icon: "success",
-          title: "Congratulations!",
+          title: "Congratulations!!!",
           text: "You got a 20% discount for the summer sale!",
           footer: `Discounted amount: ${totalPrice.toFixed(0)} - ${totalPrice * discountPercentage.toFixed(
             2
