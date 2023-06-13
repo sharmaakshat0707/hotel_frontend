@@ -10,10 +10,6 @@ import Bills from "./Bills";
 const Available = () => {
 
   const navigate = useNavigate();
-
-  
-
-
   const [data, setData] = useState({
     checkInDate: new Date(),
     checkOutDate: new Date(),
