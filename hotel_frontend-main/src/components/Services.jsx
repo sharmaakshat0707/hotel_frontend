@@ -10,7 +10,7 @@ import Service7 from '../assets/Services/Service7.png';
 const Services = () => {
   return (
     <div>
-      <h1>Services</h1>
+      <h1 style={{marginLeft:"630px" , marginTop:"80px"}}>Services</h1>
       <div className="service-panel">
         <div className="service-one">
           <div className="service-box">
