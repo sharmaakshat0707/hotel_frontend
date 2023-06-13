@@ -49,26 +49,49 @@ const Payment = ({
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // ... existing code ...
 
-    const form = e.target;
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
+const handleSubmit = (e) => {
+  e.preventDefault();
 
-    const guestData = {
-      name: data.firstName + " " + data.lastName,
-      email: data.email,
-      phone: data.phone,
-      address: data.address,
-    };
+  const form = e.target;
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
 
+  // Email validation check
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(data.email)) {
+    toast.error("Invalid email address. Please enter a valid email.", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      progress: undefined,
+      theme: "light",
+    });
+    return;
+  }
+
+  const guestData = {
+    name: data.firstName + " " + data.lastName,
+    email: data.email,
+    phone: data.phone,
+    address: data.address,
+  };
+
+  // Validation 
+  if (
+    isNaN(data.firstName) &&
+    isNaN(data.lastName) &&
+    !isNaN(data.phone) &&
+    data.phone !== "abc"
+  ) {
     saveGuest(guestData, localStorage.getItem("token"))
       .then((response) => {
-        console.log(response.data,"response");
-        createBooking({ ...data,guestIds: [response.data.id] }, localStorage.getItem("token"))
+        console.log(response.data, "response");
+        createBooking({ ...data, guestIds: [response.data.id] }, localStorage.getItem("token"))
           .then((res) => {
             toast.success("Booking Successful", {
               position: "top-right",
@@ -96,11 +119,25 @@ const Payment = ({
               theme: "light",
             });
           });
+      })
+      .catch((error) => {
+        console.log(error);
       });
-  };
+  } else {
+    toast.error("Invalid input. Please check your entries.", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      progress: undefined,
+      theme: "light",
+    });
+  }
+};
+
   return (
     <div>
-      <div className="payment-panel">
+      <div className="payment-panel" style={{marginTop:"110px" , height:"650px"}}>
         <div className="container" style={{ padding: "10px 400px" }}>
           <ToastContainer />
           <div className="card">
@@ -108,7 +145,7 @@ const Payment = ({
               className="card-header"
               style={{ backgroundColor: "Lightgrey", fontSize: "30px" }}
             >
-              Personal Information    
+              Personal Information
             </div>
             <form className="card-body Dark" onSubmit={handleSubmit}>
               <div className="row mb-2">
@@ -192,7 +229,7 @@ const Payment = ({
               <button
                 type="submit"
                 className="btn btn-success"
-                style={{ marginBottom: "50px" }}
+                style={{marginTop:"10px" ,marginBottom: "50px" , marginLeft:"0px", padding:"10px 30px"}}
               >
                 Proceed
               </button>
@@ -200,7 +237,6 @@ const Payment = ({
           </div>
         </div>
       </div>
-      {/* <Footer /> */}
     </div>
   );
 };
