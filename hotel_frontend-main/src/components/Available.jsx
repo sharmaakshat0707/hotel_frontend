@@ -1,29 +1,24 @@
 import React, { useState } from "react";
 import "../css/Available.css";
-import { getAvailableRooms } from '../services/RoomService'
+import { getAvailableRooms } from "../services/RoomService";
 import { useNavigate } from "react-router";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Bills from "./Bills";
-
 
 const Available = () => {
-
   const navigate = useNavigate();
-
-  
-
+  const presentDate = new Date().toISOString().split('T')[0];
 
   const [data, setData] = useState({
     checkInDate: new Date(),
     checkOutDate: new Date(),
-    numAdults: '',
-    numChildren: '',
-    numNights: '',
-  })
+    numAdults: "1", 
+    numChildren: "0",
+    numNights: "",
+  });
 
   const handleChange = (e) => {
-    if (e.target.name === 'checkInDate' || e.target.name === 'checkOutDate') {
+    if (e.target.name === "checkInDate" || e.target.name === "checkOutDate") {
       setData({ ...data, [e.target.name]: new Date(e.target.value) });
     } else {
       setData({ ...data, [e.target.name]: e.target.value });
@@ -38,10 +33,8 @@ const Available = () => {
       const numNights = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // Calculate number of nights
       return numNights.toString(); // Convert to a string before returning
     }
-    return '';
+    return "";
   };
-
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -49,54 +42,55 @@ const Available = () => {
     const checkOutDate = data.checkOutDate.toISOString().split("T")[0];
     const numAdults = parseInt(data.numAdults);
     const numChildren = parseInt(data.numChildren);
-    const numNights = calculateNumNights(); 
+    const numNights = calculateNumNights();
     // const numRooms = parseInt();
-    setData({...data,numNights});
-    console.log(data.checkInDate.toISOString())
+    setData({ ...data, numNights });
+    console.log(data.checkInDate.toISOString());
     console.log(data);
 
     if (checkOutDate < checkInDate) {
-      toast.error("Check-out date should be after check-in date");
+      toast.error("CHECK-OUT DATE SHOULD BE AFTER CHECK-IN DATE");
       return;
     }
 
-    if(numAdults<=0){
+    if (numAdults <= 0) {
       toast.error("numAdults should be greater than 0");
       return;
     }
-    
+
     getAvailableRooms({
-      checkInDate: data.checkInDate.toISOString().split('T')[0],
-      checkOutDate: data.checkOutDate.toISOString().split('T')[0],
+      checkInDate: data.checkInDate.toISOString().split("T")[0],
+      checkOutDate: data.checkOutDate.toISOString().split("T")[0],
       numAdults: parseInt(data.numAdults),
       numChildren: parseInt(data.numChildren),
       numNights: numNights,
-
-    }).then(res => {
-      console.log(res.data)
-      navigate('/image-slider', {
-        state: {
-          from: '/available',
-          data: res.data,
-          checkInDate: data.checkInDate.toISOString().split('T')[0],
-          checkOutDate: data.checkOutDate.toISOString().split('T')[0],
-          numAdults:parseInt(data.numAdults),
-          numChildren:parseInt(data.numChildren),
-
-        }
-      })
-    }).catch(err => {
-      console.log(err)
     })
-
-  }
+      .then((res) => {
+        console.log(res.data);
+        navigate("/image-slider", {
+          state: {
+            from: "/available",
+            data: res.data,
+            checkInDate: data.checkInDate.toISOString().split("T")[0],
+            checkOutDate: data.checkOutDate.toISOString().split("T")[0],
+            numAdults: parseInt(data.numAdults),
+            numChildren: parseInt(data.numChildren),
+          },
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <div className="available">
       <div className="available-box">
+        <h2>Enjoy Your Holiday</h2>
+        <span style={{marginLeft:"-21px" , color:"lightGrey" , wordSpacing:"3px"}}>Select & Book Your Room</span>
         <form onSubmit={handleSubmit}>
-          <label style={{ margin: "20px 150px" }}>
-            <b>Check-In-Date:</b>
+          <div className="flex_space">
+          <label style={{color:"white" , fontSize:"20px"  , marginRight:"117px"}}>Check In Date</label>
             <input
               type="date"
               name="checkInDate"
@@ -108,10 +102,12 @@ const Available = () => {
                 data.checkInDate.getDate().toString().padStart(2, 0)
               }
               onChange={handleChange}
-              required />
-          </label>
-          <label>
-            <b>Check-Out-Date:</b>
+              placeholder="Check In"
+              style={{ width: "45.9%" , height:"50px"}}
+              min={presentDate} // Set the min attribute to the presentDate
+              required
+            />
+            <label style={{color:"white" , fontSize:"20px"  , marginRight:"108px"}}>Check out Date</label>
             <input
               type="date"
               name="checkOutDate"
@@ -123,44 +119,50 @@ const Available = () => {
                 data.checkOutDate.getDate().toString().padStart(2, 0)
               }
               onChange={handleChange}
-              required />
-          </label>
-          <div className="inputBox">
-              <h3>No of Adults</h3>
-              <input
-                type="number"
-                name="numAdults"
-                placeholder="Number of Guests"
-                onChange={handleChange}
-                value={data.numAdults}
-                min={1}
-                required
-              />
-            </div>
-            <div className="inputBox">
-              <h3>Number of Nights</h3>
-              <input
-                type="text" // Change input type to 'text' to display the calculated numNights
-                name="numNights"
-                placeholder="Number Of Nights"
-                value={calculateNumNights()} // Use calculateNumNights() to display the calculated value
-                readOnly // Make the input read-only
-                required
-              />
-            </div>
-            <div className="inputBox">
-              <h3>Number Of Children</h3>
-              <input
-                type="number"
-                name="numChildren"
-                placeholder="Number Of Children"
-                onChange={handleChange}
-                value={data.numChildren}
-                min={0}
-                required
-              />
-            </div>
-          <button className="con-button" type="submit">SEARCH</button>
+              placeholder="Check Out"
+              style={{ width: "45.9%" , height:"50px"}}
+              min={presentDate} // Set the min attribute to the presentDate
+              required
+            />
+          </div>
+          <div className="flex_space">
+            <label style={{color:"white" , fontSize:"20px"  ,  marginRight:"80px"}}>Number Of Adults</label>
+            <input
+              type="number"
+              name="numAdults"
+              placeholder="Adult(s)"
+              onChange={handleChange}
+              value={data.numAdults}
+              min={1}
+              max={4}
+              style={{ width: "45.9%" , height:"50px"}}
+              required
+            />
+            <label style={{color:"white" , fontSize:"20px" ,  marginRight:"60px"}}>Number Of Children</label>
+            <input
+              type="number" // Change input type to 'text' to display the calculated numNights
+              name="numChildren"
+              placeholder="Children(s)(0-12)"
+              onChange={handleChange}
+              value={data.numChildren}
+              style={{ width: "45.9%", height:"50px" }}
+              min={0}
+              max={2}
+              required
+            />
+          </div>
+          <label style={{color:"white", fontSize:"20px" , marginRight:"78px"}}>Number Of Nights</label>
+          <input
+            type="text" // Change input type to 'text' to display the calculated numNights
+            name="numNights"
+            placeholder="Number Of Nights"
+            value={calculateNumNights()} // Use calculateNumNights() to display the calculated value
+            readOnly // Make the input read-only
+            style={{ width: "45.9%", height:"50px", backgroundColor:"lightGrey" }}
+            required
+          />
+          <br />
+          <input type="Submit" value="SEARCH" className="submit" />
         </form>
       </div>
       <ToastContainer />
@@ -168,4 +170,20 @@ const Available = () => {
   );
 };
 
-export default Available;
+export default Available;      
+                                                                                                                                            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
