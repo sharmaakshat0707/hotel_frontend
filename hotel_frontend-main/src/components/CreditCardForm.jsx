@@ -1,11 +1,16 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../css/CreditCard.css";
 import { saveCard } from "../services/CreditCardService";
 import Swal from "sweetalert2";
+import Footer from "./Footer";
 
 const CreditCardForm = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [totalPrice, setTotalPrice] = useState(
+    location.state ? location.state.totalPrice : 0
+  );
   const [cardNumber, setCardNumber] = useState("");
   const [cardHolderName, setCardHolderName] = useState("");
   const [expirationMonth, setExpirationMonth] = useState("");
@@ -15,29 +20,50 @@ const CreditCardForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (cardNumber.length !== 16) {
+    // Card number validation
+    const cardNumberRegex = /^[0-9]{16}$/;
+    if (!cardNumber.match(cardNumberRegex)) {
       Swal.fire({
         icon: "error",
         title: "Invalid Card Number",
-        text: "Card Number should be exactly 16 digits.",
+        text: "Card number should contain only numbers.",
       });
       return;
     }
 
-    if (!cardHolderName) {
+    // Card holder name validation
+    const cardHolderNameRegex = /^[A-Za-z\s]+$/;
+    if (!cardHolderName.match(cardHolderNameRegex)) {
       Swal.fire({
         icon: "error",
-        title: "Missing Card Holder Name",
-        text: "Please enter the Card Holder Name.",
+        title: "Invalid Card Holder Name",
+        text: "Card holder name should contain only letters.",
       });
       return;
     }
 
-    if (!expirationMonth || !expirationYear || !cvv) {
+    // CVV validation
+    const cvvRegex = /^[0-9]{3}$/;
+    if (!cvv.match(cvvRegex)) {
       Swal.fire({
         icon: "error",
-        title: "Incomplete Details",
-        text: "Please enter all required fields.",
+        title: "Invalid CVV",
+        text: "CVV should be a 3-digit number.",
+      });
+      return;
+    }
+
+    // Expiration date validation
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1; // January is month 0
+    const selectedYear = parseInt(expirationYear, 10);
+    const selectedMonth = parseInt(expirationMonth, 10);
+  
+    if (selectedYear < currentYear || (selectedYear === currentYear && selectedMonth < currentMonth)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Expiration Date",
+        text: "Please select a valid expiration date.",
       });
       return;
     }
@@ -69,10 +95,18 @@ const CreditCardForm = () => {
         text: "Your payment has been successfully processed.",
       }).then(() => {
         // Navigate to homepage after clicking "OK" button
-        navigate("/");
+        navigate("/rating");
       });
     } catch (error) {
       console.error("Error saving credit card details:", error);
+    }
+  };
+
+  const handleCVVChange = (e) => {
+    const inputValue = e.target.value;
+    const cvvRegex = /^[0-9]{0,3}$/;
+    if (inputValue.match(cvvRegex)) {
+      setCVV(inputValue);
     }
   };
 
@@ -80,6 +114,7 @@ const CreditCardForm = () => {
     <div>
       <div className="creditbg">
         <div className="credit-con">
+          <h3 style={{ color: "Darkgreen" }}>Total Amount: {totalPrice}</h3>
           <form onSubmit={handleSubmit}>
             <div className="mb-3 taking">
               <label htmlFor="cardNumberInput" className="form-label">
@@ -92,10 +127,10 @@ const CreditCardForm = () => {
                 placeholder="Enter Your Card Number Here"
                 style={{ width: "400px" }}
                 value={cardNumber}
+                minLength={0}
+                maxLength={16}
                 onChange={(e) => setCardNumber(e.target.value)}
                 required
-                minLength={16}
-                maxLength={16}
               />
             </div>
             <div className="mb-3">
@@ -124,10 +159,8 @@ const CreditCardForm = () => {
                 placeholder="Enter Card CVV"
                 style={{ width: "400px" }}
                 value={cvv}
-                onChange={(e) => setCVV(e.target.value)}
+                onChange={handleCVVChange}
                 required
-                minLength={3}
-                maxLength={3}
               />
             </div>
             <div
@@ -170,16 +203,16 @@ const CreditCardForm = () => {
                   style={{ marginTop: "9px", marginLeft: "13px" }}
                 >
                   <option value="">Select Year</option>
-                  <option value="2016">2016</option>
-                  <option value="2017">2017</option>
-                  <option value="2018">2018</option>
-                  <option value="2019">2019</option>
-                  <option value="2020">2020</option>
-                  <option value="2021">2021</option>
-                  <option value="2022">2022</option>
                   <option value="2023">2023</option>
                   <option value="2024">2024</option>
                   <option value="2025">2025</option>
+                  <option value="2026">2026</option>
+                  <option value="2027">2027</option>
+                  <option value="2028">2028</option>
+                  <option value="2029">2029</option>
+                  <option value="2030">2030</option>
+                  <option value="2031">2031</option>
+                  <option value="2032">2032</option>
                 </select>
               </div>
             </div>
@@ -190,6 +223,7 @@ const CreditCardForm = () => {
           </form>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };
